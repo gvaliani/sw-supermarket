@@ -19,10 +19,6 @@ gulp.task('serve', function() {
   browserSync.init({
     server: {
       baseDir: "./"
-    },
-    https: {
-    	key: "./localhost.key",
-     	cert: "./localhost.cert"
     }
   });
 
