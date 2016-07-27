@@ -1,0 +1,21 @@
+{
+  "name": "service-worker-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.13.0",
+    "gulp": "^3.9.1",
+    "gulp-load-plugins": "^1.2.4",
+    "systemjs-builder": "^0.15.23"
+  },
+  "dependencies": {
+    "systemjs": "^0.19.32",
+    "systemjs-plugin-text": "0.0.8"
+  }
+}

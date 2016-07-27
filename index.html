@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Service Worker</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="manifest" type="text/manifest" href="/manifest.json">
+	<style type="text/css">
+		/* Move down content because we have a fixed navbar that is 50px tall */
+		body {
+		  padding-top: 50px;
+		}
+
+		.navbar-fixed-top {
+		  border: 0;
+		}
+	</style>
+</head>
+<body ng-app="sw">
+	
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="#">Service worker</a>
+	    </div>
+	    <div id="navbar" class="navbar-collapse collapse">
+	      <ul class="nav navbar-nav">
+	        <li><a href="#">Home</a></li>
+	        <li><a ui-sref="demo1">Demo 1</a></li>
+	        <li><a ui-sref="demo2">Demo 2</a></li>
+	      </ul>
+	    </div>
+	  </div>
+	</nav>
+
+	<div ui-view></div>
+
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+	
+	<script type="text/javascript">
+		if ('serviceWorker' in navigator) {  
+		  navigator.serviceWorker.register('./service-worker.js', { scope: './' })
+		  .then(function(registration) {
+		    console.log("Service Worker Registered", registration);
+		  })
+		  .catch(function(err) {
+		    console.log("Service Worker Failed to Register", err);
+		  })
+		}
+	</script>
+	<script type="text/javascript" src="app/app.module.js"></script>
+	<script type="text/javascript" src="app/app.config.js"></script>
+</body>
+</html>
