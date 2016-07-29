@@ -1,0 +1,79 @@
+		body {
+			font-family: "Roboto", sans serif;
+			font-weight: 300;
+		}
+		nav{
+			background-color: #0097a7;
+			font-family: "Roboto", sans serif;
+		}
+		nav i {
+			margin-top:12px;
+		}
+		.home{
+			padding:5%;
+		}
+		input:-webkit-autofill,
+		input:-webkit-autofill:hover,
+		input:-webkit-autofill:active,
+		input:-webkit-autofill:focus {
+			background-color: #FFFFFF !important;
+			color: #555 !important;
+			-webkit-box-shadow: 0 0 0 1000px white inset !important;
+			-webkit-text-fill-color: #555555 !important;
+		}
+		#add_price {
+			margin-left: 20px;
+			width: 87%;
+		}
+		#addtocart{
+			color:#26A69A;
+			vertical-align: middle;
+		}
+		#removefromcart{
+			color:red;
+			vertical-align: middle;
+		}
+		.btn{
+			width: 50%;
+		}
+		.product-list-item.ng-enter {
+			-ms-opacity: 0;
+			opacity: 0;
+			-webkit-transition:0.2s linear all;
+			-moz-transition:0.2s linear all;
+			-ms-transition:0.2s linear all;
+			-o-transition:0.2s linear all;
+			transition:0.2s linear all;
+		}
+
+
+		.product-list-item.ng-enter.ng-enter-active {
+			-ms-opacity: 1;
+			opacity: 1;
+		}
+
+		.product-list-item.ng-leave {
+			-webkit-transition:0.2s linear all;
+			-moz-transition:0.2s linear all;
+			-ms-transition:0.2s linear all;
+			-o-transition:0.2s linear all;
+			transition:0.2s linear all;
+
+			-ms-opacity: 1;
+			opacity: 1;
+		}
+		.product-list-item.ng-leave.ng-leave-active {
+			-ms-opacity: 0;
+			opacity: 0;
+			-webkit-transition:0.2s linear all;
+			-moz-transition:0.2s linear all;
+			-ms-transition:0.2s linear all;
+			-o-transition:0.2s linear all;
+			transition:0.2s linear all;
+		}
+		.tabs .tab .active, .tabs .tab a:hover{
+			color:#0097a7;
+		}
+		.tabs .tab a{
+			color:#4dd0e1;
+		}

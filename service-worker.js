@@ -3,14 +3,20 @@ self.addEventListener('install', function(event) {
 	console.log('Install');
 
 	var file_to_cache = [
-    '/',
-    '/bower_components/bootstrap/dist/css/bootstrap.min.css',
-    '/bower_components/jquery/dist/jquery.min.js',
-    '/bower_components/angular/angular.min.js',
-    '/bower_components/angular-ui-router/release/angular-ui-router.min.js',
-    '/app/app.module.js',
-    '/app/app.config.js',
-    '/app/routes/home/home.html'
+  '/',
+  '/bower_components/jquery/dist/jquery.min.js',
+  '/bower_components/angular/angular.min.js',
+  '/bower_components/angular-ui-router/release/angular-ui-router.min.js',
+  '/app/app.module.js',
+  '/app/app.config.js',
+  '/node_modules/font-awesome/css/font-awesome.min.css',
+  '/node_modules/materialize-css/dist/css/materialize.min.css',
+  '/node_modules/angular-materialize/src/angular-materialize.min.js',
+  '/app/routes/home/home.html',
+  '/app/routes/home/home.js',
+  '/app/routes/bought/bought.html',
+  '/app/routes/bought/bought.js',
+  '/app/styles/styles.css'
   ];
 
   event.waitUntil(
@@ -21,7 +27,7 @@ self.addEventListener('install', function(event) {
     .then(function(){
       return self.skipWaiting();
     })
-  );
+    );
 });
 
 self.addEventListener('activate', function(event) {  
@@ -33,15 +39,15 @@ self.addEventListener('fetch', function(event) {
 	event.respondWith(
     // new Response('Hello from your friendly neighbourhood service worker!')
     caches
-      .match(event.request)
-      .then(function(response){
-        return response || fetch(event.request).then(function(response){
-          caches.open(cache_name).then(function(cache){
-            cache.put(event.request, response.clone());
-            console.log('response: ', response);
-            return response;
-          });
+    .match(event.request)
+    .then(function(response){
+      return response || fetch(event.request).then(function(response){
+        caches.open(cache_name).then(function(cache){
+          cache.put(event.request, response.clone());
+          console.log('response: ', response);
+          return response;
         });
-      })
-  );
+      });
+    })
+    );
 });
