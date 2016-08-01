@@ -17,7 +17,7 @@
 	</nav>
 	<ul tabs reload="allTabContentLoaded">
 		<li class="tab col s3"><a  ui-sref="home" ui-sref-active="active">Armar lista</a></li>
-		<li class="tab col s3"><a  ui-sref="bought" ui-sref-active="active">Comprados</a></li>
+		<li class="tab col s3"><a  ui-sref="bought" ui-sref-active="active">Comprados <span class="productBadge" ng-show="$root.bought_product_list.length">{{$root.bought_product_list.length}}</span></a></li>
 	</ul>
 
 	<div ui-view></div>
@@ -27,20 +27,10 @@
 	<script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>	
 	<script type="text/javascript" src="node_modules/materialize-css/dist/js/materialize.min.js"></script>
 	<script type="text/javascript" src="node_modules/angular-materialize/src/angular-materialize.min.js"></script>
-	<script type="text/javascript">
-		if ('serviceWorker' in navigator) {  
-			navigator.serviceWorker.register('./service-worker.js', { scope: './' })
-			.then(function(registration) {
-				console.log("Service Worker Registered", registration);
-			})
-			.catch(function(err) {
-				console.log("Service Worker Failed to Register", err);
-			})
-		}
-	</script>
 	<script type="text/javascript" src="app/app.module.js"></script>
 	<script type="text/javascript" src="app/app.config.js"></script>
 	<script type="text/javascript" src="./app/routes/home/home.js"></script>
 	<script type="text/javascript" src="./app/routes/bought/bought.js"></script>
+	<script type="text/javascript" src="app/sw.js"></script>
 </body>
 </html>

@@ -1,10 +1,19 @@
 	<div ng-if="bought.bought_product_list.length">
 		<ul class="collection with-header">
-			<li class="collection-header"><h5>Comprados</h5></li>
+			<li class="collection-header"><span class="deep-orange-text text-accent-4">Comprados: {{bought.bought_product_list.length}}</span> <span class="secondary-content deep-orange-text text-accent-4">Total: {{bought.total | currency}}</span></li>
 			<li class="collection-item" ng-repeat="bought_product in bought.bought_product_list track by $index">
 				{{bought_product.name}}
 				<span class="secondary-content">				
 					{{bought_product.price | currency}}</span>
 				</li>
 			</ul>
+		</div>
+		<div ng-if="!bought.bought_product_list.length">
+			<article class="col s12 noItemBought">
+				<header>
+					<span>No hay art&iacute;culos comprados a&uacute;n</span>
+					<p>Primero debes Agregar y comprar items en tu lista de productos</p>
+					<a class="waves-effect waves-light btn-flat teal" ui-sref="home"> Armar lista </a>
+				</header>
+			</article>	
 		</div>

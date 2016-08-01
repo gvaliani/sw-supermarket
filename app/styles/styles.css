@@ -36,6 +36,15 @@
 		.btn{
 			width: 50%;
 		}
+		.productBadge{
+			background: red;
+			padding: 3px 8px;
+			border-radius: 5px;
+			color: white;
+			font-size: 10px;
+			margin-left: 5px;
+			vertical-align: middle;
+		}
 		.product-list-item.ng-enter {
 			-ms-opacity: 0;
 			opacity: 0;
@@ -45,8 +54,18 @@
 			-o-transition:0.2s linear all;
 			transition:0.2s linear all;
 		}
-
-
+		.noItemBought{
+			text-align: center;
+			color: gray;
+			margin-top: 20%;
+		}
+		.noItemBought span{
+			font-size:20px;
+		}
+		.noItemBought .btn-flat{
+			color:white;
+			margin-top: 5%;
+		}
 		.product-list-item.ng-enter.ng-enter-active {
 			-ms-opacity: 1;
 			opacity: 1;

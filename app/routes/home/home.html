@@ -1,13 +1,13 @@
    	
 <div class="row home">
-	<form   name=""  ng-submit="home.add_product()" accept-charset="utf-8">
+	<form   name="home.productForm"  ng-submit="!home.productForm.$pristine && home.productForm.$submitted && home.add_product()" accept-charset="utf-8">
 		<input-field>
-		<input id="add_grocery" type="text" data-ng-model="home.product.name" class="validate">
+		<input id="add_grocery" type="text" data-ng-model="home.product.name" class="validate" required>
 		<label for="add_grocery">Agregar Producto</label>
 		<input-field>	
 	</form>
-	<div data-ng-if="home.product_list.length">		
-		<ul class="collapsible product-list-item" data-collapsible="accordion" watch ng-repeat="product in home.product_list track by $index">
+	<div data-ng-if="$root.product_list.length">		
+		<ul class="collapsible product-list-item" data-collapsible="accordion" watch ng-repeat="product in $root.product_list track by $index">
 			<li>
 				<div class="collapsible-header" id="product_{{product.id}}"><i class="fa fa-shopping-cart"></i>
 					{{product.name}}
@@ -19,8 +19,8 @@
 					</a>
 				</div>
 				<div class="collapsible-body">
-					<form ng-show="!product.price" ng-submit="home.add_price_to_product(product.id, home.newPrice)">				
-						<input placeholder="escribi el precio del producto" id="add_price" type="text"  data-ng-model="home.newPrice" maxlength="6" class="validate">
+					<form name="home.priceForm" ng-show="!product.price" ng-submit="home.priceForm.$submitted && !home.priceForm.$pristine && home.add_price_to_product(product.id, product.newPrice)">				
+						<input placeholder="escribi el precio del producto" id="add_price" type="text"  data-ng-model="product.newPrice" maxlength="6" class="validate" required>
 					</form>
 					<div ng-show="product.price">
 						<a id="addtocart" ng-click="home.buy_product(product,$index)" class="waves-effect waves-grey lighten-5 btn-flat"><i class="fa fa-check"></i> Comprar</a><a id="removefromcart" ng-click="home.remove_product($index)" class="waves-effect waves-waves-grey lighten-5 btn-flat"><i class="fa fa-times"></i> Eliminar</a>	
