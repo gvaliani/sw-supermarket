@@ -9,12 +9,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "angular-materialize": "^0.1.9",
     "browser-sync": "^2.13.0",
-    "font-awesome": "^4.6.3",
+    "eslint": "^3.2.2",
+    "eslint-config-idiomatic": "^2.1.0",
     "gulp": "^3.9.1",
     "gulp-load-plugins": "^1.2.4",
-    "materialize-css": "^0.97.7",
     "systemjs-builder": "^0.15.23"
   },
   "dependencies": {

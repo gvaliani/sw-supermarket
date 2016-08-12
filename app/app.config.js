@@ -1,25 +1,28 @@
-	var app = angular.module('sw');
+( function() {
+  'use strict';
 
-	app.config(router);
-	router.$inject = ['$stateProvider', '$urlRouterProvider'];
+  var app = angular.module( 'sw' );
 
-	function router($stateProvider, $urlRouterProvider) {
+  app.config( router );
 
-		$urlRouterProvider.otherwise("/");
-	  //
-	  // Now set up the states
-	  $stateProvider
-	  .state('home', {
-	  	url: "/",
-	  	templateUrl: 'app/routes/home/home.html',
-	  	controller: 'homeCtrl',
-	  	controllerAs: 'home'
-	  })
-	  .state('bought', {
-	  	url: "/bought-products",
-	  	templateUrl: 'app/routes/bought/bought.html',
-	  	controller: 'boughtCtrl',
-	  	controllerAs: 'bought'
-	  });
-	}
+  router.$inject = [ '$stateProvider', '$urlRouterProvider' ];
+  function router( $stateProvider, $urlRouterProvider ) {
 
+    $urlRouterProvider.otherwise( '/' );
+
+    // Now set up the states
+    $stateProvider
+    .state( 'home', {
+      url: '/',
+      templateUrl: 'app/routes/home/home.html',
+      controller: 'homeCtrl',
+      controllerAs: 'home'
+    } )
+    .state( 'bought', {
+      url: '/bought-products',
+      templateUrl: 'app/routes/bought/bought.html',
+      controller: 'boughtCtrl',
+      controllerAs: 'bought'
+    } );
+  }
+} )()

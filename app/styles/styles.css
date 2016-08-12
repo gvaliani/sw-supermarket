@@ -33,8 +33,16 @@
 			color:red;
 			vertical-align: middle;
 		}
-		.btn{
-			width: 50%;
+		.btn-action{
+			width:50%;
+		}
+		.btn-addprice{
+			width:100%;
+			text-align: center;
+			border-radius: 0px 0px 2px 2px;
+		}
+		.btn-flat{			
+			text-align: center;
 		}
 		.productBadge{
 			background: red;

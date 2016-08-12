@@ -1,54 +1,109 @@
 var cache_name = 'v1';
+
 self.addEventListener('install', function(event) {
 	console.log('Install');
 
-	var file_to_cache = [
-  '/',
-  '/bower_components/jquery/dist/jquery.min.js',
-  '/bower_components/angular/angular.min.js',
-  '/bower_components/angular-ui-router/release/angular-ui-router.min.js',
-  '/node_modules/font-awesome/css/font-awesome.min.css',
-  '/node_modules/materialize-css/dist/css/materialize.min.css',
-  '/node_modules/angular-materialize/src/angular-materialize.min.js',
-  '/app/app.module.js',
-  '/app/app.config.js',
-  '/index.html',
-  '/app/routes/home/home.html',
-  '/app/routes/home/home.js',
-  '/app/routes/bought/bought.html',
-  '/app/routes/bought/bought.js',
-  '/app/styles/styles.css'
-  ];
+  var config = {
+      path: {
+        app: '/app/',
+        vendors: '/app/vendors/',
+        fonts: '/app/fonts/',
+        styles: '/app/styles/'
+      }
+    },
+    file_to_cache = [
+      // VENDORS
+      config.path.vendors + 'jquery.min.js',
+      config.path.vendors + 'angular.min.js',
+      config.path.vendors + 'angular-ui-router.min.js',
+      config.path.vendors + 'materialize.min.js',
+      config.path.vendors + 'angular-materialize.min.js',
 
-  event.waitUntil(
-    caches.open(cache_name)
-    .then(function(cache) {
-      return cache.addAll(file_to_cache);
-    })
-    .then(function(){
-      return self.skipWaiting();
-    })
-    );
+      // FONTS
+      config.path.fonts + 'roboto/Roboto-Light.ttf',
+      config.path.fonts + 'roboto/Roboto-Light.woff',
+      config.path.fonts + 'roboto/Roboto-Light.woff2',
+      config.path.fonts + 'roboto/Roboto-Medium.ttf',
+      config.path.fonts + 'roboto/Roboto-Medium.woff',
+      config.path.fonts + 'roboto/Roboto-Medium.woff2',
+      config.path.fonts + 'roboto/Roboto-Regular.ttf',
+      config.path.fonts + 'roboto/Roboto-Regular.woff',
+      config.path.fonts + 'roboto/Roboto-Regular.woff2',
+      config.path.fonts + 'fontawesome/fontAwesome.otf?v=4.6.3',
+      config.path.fonts + 'fontawesome/fontawesome-webfont.eot?v=4.6.3',
+      config.path.fonts + 'fontawesome/fontawesome-webfont.svg?v=4.6.3',
+      config.path.fonts + 'fontawesome/fontawesome-webfont.ttf?v=4.6.3',
+      config.path.fonts + 'fontawesome/fontawesome-webfont.woff?v=4.6.3',
+      config.path.fonts + 'fontawesome/fontawesome-webfont.woff2?v=4.6.3',
+
+      // Index.html
+      '/',
+
+      // STYLES
+      config.path.styles + 'styles.css',
+      config.path.styles + 'font-awesome.css',
+      config.path.styles + 'materialize.min.css',
+
+      // APP
+      config.path.app + 'app.module.js',
+      config.path.app + 'app.config.js',
+      config.path.app + 'routes/home/home.html',
+      config.path.app + 'routes/home/home.js',
+      config.path.app + 'routes/bought/bought.html',
+      config.path.app + 'routes/bought/bought.js'
+    ];
+
+	event.waitUntil(
+		caches.open(cache_name)
+		.then(function(cache) {
+			console.log("abrio cache");
+			return cache.addAll(file_to_cache);
+		})
+		.then(function (cache){
+			self.skipWaiting();
+		})
+		.catch(function(err){
+			console.log("no abrio",err);
+		})
+		);
 });
 
-self.addEventListener('activate', function(event) {  
-	console.log('Activate');
+self.addEventListener('activate', event => {
+	// clients.claim();
+	// event.waitUntil(
+	// 	caches.keys().then(cacheNames => {
+	// 		return Promise.all(
+	// 			cacheNames
+	// 			.filter(n => caches.indexOf(n) === -1)
+	// 			.map(name => caches.delete(name))
+	// 			);
+	// 	})
+	// 	);
 });
 
-self.addEventListener('fetch', function(event) {
-	console.log('Fetch event: ', event);
-	event.respondWith(
-    // new Response('Hello from your friendly neighbourhood service worker!')
-    caches
-    .match(event.request)
-    .then(function(response){
-      return response || fetch(event.request).then(function(response){
-        caches.open(cache_name).then(function(cache){
-          cache.put(event.request, response.clone());
-          console.log('response: ', response);
-          return response;
+self.addEventListener( 'fetch', function interceptGetRequest( event ) {
+  console.log('caches: ', caches.keys())
+
+  // Intercept request just for GET methods
+  if ( event.request.method != 'GET' ) {
+    return;
+  }
+
+  event.respondWith(
+		caches
+		.match(event.request)
+		.then(function(response){
+
+			console.log("response: ",response);
+			return response || fetch(event.request).then(
+        function(response){ // fetch successful
+          caches.open(cache_name).then(function(cache){
+            cache.put(event.request, response.clone());
+            return response;
+          });
+			  }, function(e) { // Fetch Failure
+          console.log('Fetch error: ', e)
         });
-      });
-    })
-    );
+		})
+		);
 });

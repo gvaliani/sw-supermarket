@@ -1,34 +1,35 @@
-   	
+
 <div class="row home">
 	<form   name="home.productForm"  ng-submit="!home.productForm.$pristine && home.productForm.$submitted && home.add_product()" accept-charset="utf-8">
 		<input-field>
 		<input id="add_grocery" type="text" data-ng-model="home.product.name" class="validate" required>
 		<label for="add_grocery">Agregar Producto</label>
-		<input-field>	
+		<input-field>
 	</form>
-	<div data-ng-if="$root.product_list.length">		
+	<div data-ng-if="$root.product_list.length">
 		<ul class="collapsible product-list-item" data-collapsible="accordion" watch ng-repeat="product in $root.product_list track by $index">
 			<li>
 				<div class="collapsible-header" id="product_{{product.id}}"><i class="fa fa-shopping-cart"></i>
 					{{product.name}}
-					<a ng-show="product.price" class="secondary-content">				
+					<a ng-show="product.price" class="secondary-content">
 						<span>  {{product.price | currency}}</span>
 					</a>
-					<a ng-show="!product.price" class="secondary-content">				
+					<a ng-show="!product.price" class="secondary-content">
 						Agregar Precio
 					</a>
 				</div>
 				<div class="collapsible-body">
-					<form name="home.priceForm" ng-show="!product.price" ng-submit="home.priceForm.$submitted && !home.priceForm.$pristine && home.add_price_to_product(product.id, product.newPrice)">				
-						<input placeholder="escribi el precio del producto" id="add_price" type="text"  data-ng-model="product.newPrice" maxlength="6" class="validate" required>
+					<form ng-show="!product.price" ng-submit="home.add_price_to_product(product.id, product.newPrice)">
+						<input placeholder="escribi el precio del producto" id="add_price" type="number"  data-ng-model="product.newPrice" maxlength="6" class="validate" required>
+						<button class="wave-effect btn teal text-white btn-addprice"  type="submit">Agregar</button>
 					</form>
 					<div ng-show="product.price">
-						<a id="addtocart" ng-click="home.buy_product(product,$index)" class="waves-effect waves-grey lighten-5 btn-flat"><i class="fa fa-check"></i> Comprar</a><a id="removefromcart" ng-click="home.remove_product($index)" class="waves-effect waves-waves-grey lighten-5 btn-flat"><i class="fa fa-times"></i> Eliminar</a>	
+						<a id="addtocart" ng-click="home.buy_product(product,$index)" class="waves-effect waves-grey lighten-5 btn-flat btn-action"><i class="fa fa-check"></i> Comprar</a><a id="removefromcart" ng-click="home.remove_product($index)" class="waves-effect waves-waves-grey lighten-5 btn-flat btn-action"><i class="fa fa-times"></i> Eliminar</a>
 					</div>
 				</div>
 			</li>
 		</ul>
-		<div ng-show="product.price">		
+		<div ng-show="product.price">
 			<a ng-click="" id="addtocart" ng-click="home.buy_product(product)"><i class="fa fa-check"></i></a>
 			<a href="" id="removefromcart"  ng-click="home.remove_product(product.id)"><i class="fa fa-times"></i></a>
 		</div>
