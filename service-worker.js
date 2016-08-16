@@ -1,7 +1,7 @@
 var cache_name = 'v1';
 
-self.addEventListener('install', function(event) {
-	console.log('Install');
+self.addEventListener( 'install', function( event ) {
+	  console.log( 'Install' );
 
   var config = {
       path: {
@@ -50,26 +50,27 @@ self.addEventListener('install', function(event) {
       config.path.app + 'routes/home/home.html',
       config.path.app + 'routes/home/home.js',
       config.path.app + 'routes/bought/bought.html',
-      config.path.app + 'routes/bought/bought.js'
+      config.path.app + 'routes/bought/bought.js',
+      config.path.app + 'services/productService.js'
     ];
 
-	event.waitUntil(
-		caches.open(cache_name)
-		.then(function(cache) {
-			console.log("abrio cache");
-			return cache.addAll(file_to_cache);
-		})
-		.then(function (cache){
-			self.skipWaiting();
-		})
-		.catch(function(err){
-			console.log("no abrio",err);
-		})
+  event.waitUntil(
+		caches.open( cache_name )
+		.then( function( cache ) {
+			  console.log( 'abrio cache' );
+			  return cache.addAll( file_to_cache );
+		} )
+		.then( function( cache ) {
+			  self.skipWaiting();
+		} )
+		.catch( function( err ) {
+			  console.log( 'no abrio', err );
+		} )
 		);
-});
+} );
 
-self.addEventListener('activate', event => {
-	// clients.claim();
+self.addEventListener( 'activate', event => {
+	clients.claim();
 	// event.waitUntil(
 	// 	caches.keys().then(cacheNames => {
 	// 		return Promise.all(
@@ -79,11 +80,9 @@ self.addEventListener('activate', event => {
 	// 			);
 	// 	})
 	// 	);
-});
+} );
 
 self.addEventListener( 'fetch', function interceptGetRequest( event ) {
-  console.log('caches: ', caches.keys())
-
   // Intercept request just for GET methods
   if ( event.request.method != 'GET' ) {
     return;
@@ -91,19 +90,24 @@ self.addEventListener( 'fetch', function interceptGetRequest( event ) {
 
   event.respondWith(
 		caches
-		.match(event.request)
-		.then(function(response){
-
-			console.log("response: ",response);
-			return response || fetch(event.request).then(
-        function(response){ // fetch successful
-          caches.open(cache_name).then(function(cache){
-            cache.put(event.request, response.clone());
-            return response;
-          });
-			  }, function(e) { // Fetch Failure
-          console.log('Fetch error: ', e)
-        });
-		})
+      .match( event.request )
+      .then( function matchHandler( response ) {
+        return response || fetch( event.request ).then(
+          function fetchSuccessful( response ) {
+            return caches.open( cache_name ).then(
+              function openCacheSuccessful( cache ) {
+                cache.put( event.request, response.clone() );
+                return response;
+              },
+              function openCacheFailure( e ) {
+                console.log( 'Open cache error: ', e );
+              }
+            );
+          },
+          function fetchFailure( e ) {
+            console.log( 'Fetch error: ', e );
+          }
+        );
+      } )
 		);
-});
+} );

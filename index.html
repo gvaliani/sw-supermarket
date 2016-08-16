@@ -15,16 +15,15 @@
 <body>
 	<nav>
 		<div class="nav-wrapper">
-			<a href="#" class="brand-logo"><i class="fa fa-shopping-cart"></i>RemindMe</a>
+			<a href="#" class="brand-logo center">
+        Supermarket
+      </a>
 		</div>
 	</nav>
-	<ul tabs reload="allTabContentLoaded">
-		<li class="tab col s3"><a  ui-sref="home" ui-sref-active="active">Armar lista</a></li>
-		<li class="tab col s3"><a  ui-sref="bought" ui-sref-active="active">Comprados <span class="productBadge" ng-bind="$root.bought_product_list.length" ng-show="$root.bought_product_list.length"></span></a></li>
-	</ul>
 
-	<div ui-view></div>
-	<script  type="text/javascript">
+	<div class="container" ui-view></div>
+
+  <script  type="text/javascript">
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.register('./service-worker.js', { scope: '/' })
 			.then(function(registration) {
@@ -44,5 +43,6 @@
 	<script type="text/javascript" src="app/app.config.js"></script>
 	<script type="text/javascript" src="app/routes/home/home.js"></script>
 	<script type="text/javascript" src="app/routes/bought/bought.js"></script>
+  <script type="text/javascript" src="app/services/productService.js"></script>
 </body>
 </html>

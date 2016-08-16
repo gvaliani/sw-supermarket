@@ -1,7 +1,8 @@
 module.exports = {
   "extends": "idiomatic",
   "env": {
-    "browser": true
+    "browser": true,
+    "commonjs": true
   },
   "globals": {
     'angular': true

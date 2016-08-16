@@ -19,7 +19,8 @@ gulp.task('serve', function() {
   browserSync.init({
     server: {
       baseDir: "./"
-    }
+    },
+    middleware: require( './api/router' )
   });
 
 });

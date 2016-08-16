@@ -1,4 +1,21 @@
-		body {
+.product-card	{
+  display: flex;
+  flex-direction: row;
+}
+
+.product-card.name {
+  flex: 1;
+}
+
+.product-card.icon {
+  font-size: 21px;
+}
+
+.empty-list {
+  text-align: center;
+  color: gray;
+}
+    /*body {
 			font-family: "Roboto", sans serif;
 			font-weight: 300;
 		}
@@ -41,7 +58,7 @@
 			text-align: center;
 			border-radius: 0px 0px 2px 2px;
 		}
-		.btn-flat{			
+		.btn-flat{
 			text-align: center;
 		}
 		.productBadge{
@@ -103,4 +120,4 @@
 		}
 		.tabs .tab a{
 			color:#4dd0e1;
-		}
+		}*/
