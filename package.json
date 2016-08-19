@@ -10,14 +10,14 @@
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.13.0",
+    "clean": "^4.0.2",
     "eslint": "^3.2.2",
     "eslint-config-idiomatic": "^2.1.0",
     "gulp": "^3.9.1",
     "gulp-load-plugins": "^1.2.4",
-    "systemjs-builder": "^0.15.23"
-  },
-  "dependencies": {
-    "systemjs": "^0.19.32",
-    "systemjs-plugin-text": "0.0.8"
+    "raw-loader": "^0.5.1",
+    "run-sequence": "^1.2.2",
+    "webpack-stream": "^3.2.0",
+    "webpack-traceur-loader": "^0.3.0"
   }
 }

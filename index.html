@@ -7,10 +7,10 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="HandheldFriendly" content="True">
-	<link rel="stylesheet" href="app/styles/materialize.min.css">
-	<link rel="stylesheet" type="text/css" href="app/styles/styles.css">
+	<link rel="stylesheet" href="styles/materialize.min.css">
+	<link rel="stylesheet" type="text/css" href="styles/styles.css">
 	<link rel="manifest" type="text/manifest" href="manifest.json">
-	<link rel="stylesheet" type="text/css" href="app/styles/font-awesome.css">
+	<link rel="stylesheet" type="text/css" href="styles/font-awesome.css">
 </head>
 <body>
 	<nav>
@@ -23,26 +23,12 @@
 
 	<div class="container" ui-view></div>
 
-  <script  type="text/javascript">
-		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.register('./service-worker.js', { scope: '/' })
-			.then(function(registration) {
-				console.log("Service Worker Registered");
-			})
-			.catch(function(err) {
-				console.log("Service Worker Failed to Register", err);
-			})
-		}
-	</script>
-	<script type="text/javascript" src="app/vendors/jquery.min.js"></script>
-	<script type="text/javascript" src="app/vendors/angular.min.js"></script>
-	<script type="text/javascript" src="app/vendors/angular-ui-router.min.js"></script>
-	<script type="text/javascript" src="app/vendors/materialize.min.js"></script>
-	<script type="text/javascript" src="app/vendors/angular-materialize.min.js"></script>
-	<script type="text/javascript" src="app/app.module.js"></script>
-	<script type="text/javascript" src="app/app.config.js"></script>
-	<script type="text/javascript" src="app/routes/home/home.js"></script>
-	<script type="text/javascript" src="app/routes/bought/bought.js"></script>
-  <script type="text/javascript" src="app/services/productService.js"></script>
+  <script  type="text/javascript" src="sw-init.js"></script>
+	<script type="text/javascript" src="vendors/jquery.min.js"></script>
+	<script type="text/javascript" src="vendors/angular.min.js"></script>
+	<script type="text/javascript" src="vendors/angular-ui-router.min.js"></script>
+	<script type="text/javascript" src="vendors/materialize.min.js"></script>
+	<script type="text/javascript" src="vendors/angular-materialize.min.js"></script>
+	<script type="text/javascript" src="app.bundle.js"></script>
 </body>
 </html>

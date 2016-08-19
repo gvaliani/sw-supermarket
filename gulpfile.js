@@ -1,26 +1,78 @@
-var gulp 				= require('gulp');
-var browserSync = require('browser-sync');
-var $ 					= require('gulp-load-plugins')({lazy: false});
-var fs 					= require('fs');
-// Systemjs
-var Builder = require('systemjs-builder');
-var builder = new Builder();
+var gulp      = require( 'gulp' ),
+  browserSync = require( 'browser-sync' ),
+  webpack     = require( 'webpack-stream' ),
+  runSequence = require( 'run-sequence' ),
+  clean       = require( 'clean' ),
+  config      = {};
 
-var config = {};
 config.path = {
-	source: 'app'
+  source: 'app/',
+  server: './dist/api/router',
+  output: 'dist/',
+  output_images: 'dist/images/',
+  output_fonts: 'dist/fonts/',
+  output_vendors: 'dist/vendors/',
+  output_styles: 'dist/styles/'
 };
 
-console.log('Plugins: ', $);
-
 // Static server
-gulp.task('serve', function() {
-
-  browserSync.init({
+gulp.task( 'browser-sync', function() {
+  browserSync.init( {
     server: {
-      baseDir: "./"
+      baseDir: 'dist/'
     },
-    middleware: require( './api/router' )
-  });
+    open: false,
+    middleware: require ( config.path.server )
+  } );
+} );
 
+// Delete everything in /dist
+gulp.task('clean-dist', function () {
+  // return gulp.src( 'dist/' )
+  //   .pipe( clean() );
+});
+
+// Just moving things
+gulp.task( 'move', function() {
+  gulp.src( [ './api/**/' ] )
+  .pipe( gulp.dest( config.path.output + 'api/' ) );
+
+  gulp.src( [ 'index.html' ] )
+    .pipe( gulp.dest( config.path.output ) );
+
+  gulp.src( './app/images/**/' )
+    .pipe( gulp.dest( config.path.output_images ) );
+
+  gulp.src( './app/fonts/**/' )
+    .pipe( gulp.dest( config.path.output_fonts ) );
+
+  gulp.src( './app/styles/**/' )
+    .pipe( gulp.dest( config.path.output_styles ) );
+
+  gulp.src( [ 'sw.js', 'app/sw-init.js', 'app/sw-interceptor.js' ] )
+    .pipe( gulp.dest( config.path.output ) );
+
+  return gulp.src( './app/vendors/**/' )
+    .pipe( gulp.dest( config.path.output_vendors ) );
+} );
+
+// Create js bundle
+gulp.task('bundle', function() {
+  return gulp.src('app/app.js')
+    .pipe(
+      webpack( require( './webpack.config' ) )
+    )
+    .pipe(gulp.dest(config.path.output));
+});
+
+gulp.task( 'serve', function( cb ) {
+  runSequence( 'clean-dist', [ 'move' ], 'bundle', 'browser-sync', cb );
+
+  // Watch changes for html.
+  gulp.watch( [ 'app/**/*.*', 'sw.js', 'app/sw-*.js', '!app/**/*.js' ], [ 'move', browserSync.reload ] );
+
+  // Watch changes for js.
+  gulp.watch( 'app/**/*.js', ['bundle', browserSync.reload ] );
+
+  return true;
 });
