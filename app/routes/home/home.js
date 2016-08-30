@@ -8,7 +8,8 @@ function homeCtrl( productService ) {
     products: [],
     add_product: add_product,
     toggle_cart: toggle_cart,
-    reset_list: reset_list
+    reset_list: reset_list,
+    refresh_sw: refresh_sw
   } );
 
   function add_product() {
@@ -37,6 +38,29 @@ function homeCtrl( productService ) {
       .then( function handleSuccessDeletion() {
         refresh_list();
       } );
+  }
+
+  function refresh_sw() {
+    navigator.serviceWorker.ready.then( function handleRegistration( registration ) {
+
+      registration
+        .unregister()
+        .then( function( boolean ) {
+          console.info( 'Unregistration: ', boolean == true );
+        } )
+        .catch( function() {
+          console.info( 'Unregistration failed.' );
+        } )
+
+    } );
+
+    caches.keys().then( function( keyList ) {
+
+      return Promise.all( keyList.map( function( key ) {
+        caches.delete( key );
+        console.info( 'Delete cache:', key );
+      } ) );
+    } );
   }
 
 

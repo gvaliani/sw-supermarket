@@ -72,7 +72,7 @@ gulp.task( 'serve', function( cb ) {
   gulp.watch( [ 'app/**/*.*', 'sw.js', 'app/sw-*.js', '!app/**/*.js' ], [ 'move', browserSync.reload ] );
 
   // Watch changes for js.
-  gulp.watch( 'app/**/*.js', ['bundle', browserSync.reload ] );
+  gulp.watch( [ 'app/**/*.js', 'app/**/*.html' ], ['bundle', browserSync.reload ] );
 
   return true;
 });

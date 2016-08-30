@@ -4,11 +4,12 @@
 
     <form name="home.productForm"  ng-submit="!home.productForm.$pristine && home.productForm.$submitted && home.add_product()" accept-charset="utf-8">
       <input-field>
-      <input id="add_grocery" type="text" data-ng-model="home.product.name" class="validate" required>
-      <label for="add_grocery">Agregar Producto</label>
-      <input-field>
+        <input id="add_grocery" type="text" data-ng-model="home.product.name" class="validate" required>
+        <label for="add_grocery">Agregar Producto</label>
+      </input-field>
     </form>
 
+    <a class="waves-effect waves-light btn left" data-ng-click="home.refresh_sw()">Refresh sw</a>
     <a data-ng-if="home.products.length" class="waves-effect waves-light btn right" data-ng-click="home.reset_list()">Reset list</a>
   </div>
 </div>
