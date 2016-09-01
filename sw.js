@@ -1,13 +1,13 @@
-importScripts('./sw-interceptor.js');
+importScripts( './sw-interceptor.js' );
 
 function isApiCall( event ) {
-  return event.request.url.indexOf('/api/') > -1
+  return event.request.url.indexOf( '/api/' ) > -1
 }
 
 var cache_name = 'v1';
 
 self.addEventListener( 'install', function( event ) {
-	  console.log( 'Install' );
+  console.log( 'Install' );
 
   var config = {
       path: {
@@ -57,20 +57,20 @@ self.addEventListener( 'install', function( event ) {
   event.waitUntil(
 		caches.open( cache_name )
 		.then( function( cache ) {
-			  console.log( 'abrio cache' );
-			  return cache.addAll( file_to_cache );
+			    console.log( 'abrio cache' );
+			    return cache.addAll( file_to_cache );
 		} )
 		.then( function( cache ) {
-			  self.skipWaiting();
+			    self.skipWaiting();
 		} )
 		.catch( function( err ) {
-			  console.log( 'no abrio', err );
+			    console.log( 'no abrio', err );
 		} )
 		);
 } );
 
 self.addEventListener( 'activate', event => {
-	clients.claim();
+	  clients.claim();
 	// event.waitUntil(
 	// 	caches.keys().then(cacheNames => {
 	// 		return Promise.all(
@@ -113,40 +113,63 @@ self.addEventListener( 'fetch', function interceptGetRequest( event ) {
       );
   }
 
+  // For GET, POST, PUT, DELETE to API
   if ( isApiCall ) {
-    // For POST, PUT, DELETE
-    event.respondWith(
-      fetch( event.request )
-        .then(
-          function fetchSuccess( response ) {
-            return response;
-          }
-        )
-        .catch( function fetchFailure( e ) {
-          self.registration.sync.register( 'myFirstSync' );
-        }
-      )
-    )
+    console.log('event.request: ', event.request)
+    // let request = event.request.clone();
+    // event.respondWith(
+    //   fetch( event.request )
+    //     .then(
+    //       function fetchSuccess( response ) {
+    //         return response;
+    //       }
+    //     )
+    //     .catch( function fetchFailure( e ) {
+
+    //       self.registration.sync.register( 'myFirstSync' );
+    //     }
+    //   )
+    // )
   }
 
 } );
 
 self.addEventListener( 'message', function messageHandler( event ) {
-  console.log( 'Message event: ', event );
+  // Make call through sync event.
+  async_request( event.data, event );
 } );
 
-self.addEventListener('sync', function(event) {
-  console.log('Sync event!');
-  if ( event.tag == 'myFirstSync' ) {
-    event.waitUntil(
-      fetch( '/api/products/', {
-        method: 'POST',
-        body: '{"name": "a", "inCart": false}',
-        credentials: 'include'
-      } )
-    );
+function async_request( data, message_event ) {
+
+  function post( event ) {
+    if ( event.tag == 'myFirstSync' ) {
+
+      let request = new Request( data.url, {
+        method: data.method,
+        body: JSON.stringify( data.data )
+      } );
+
+      event.waitUntil(
+        fetch( request )
+          .then(
+            function fetchSuccess( response ) {
+              let res = response.clone();
+              // unbind event listener. Otherwise it will generate duplicated calls.
+              self.removeEventListener( 'sync', post );
+
+              res.json().then( function( json ) {
+                message_event.ports[ 0 ].postMessage( [ json ] );
+              } )
+            }
+          )
+      );
+    }
   }
-});
+
+  self.addEventListener( 'sync', post );
+  self.registration.sync.register( 'myFirstSync' );
+}
+
 
 // self.addEventListener( 'push', function( event ) {
 //   event.waitUntil(

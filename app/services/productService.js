@@ -23,8 +23,34 @@ function productService( $http ) {
       method: 'POST',
       url: '/api/products',
       data: data
-    } ).then( function succesHandler( res ) {
+    } )
+    .then( function succesHandler( res ) {
       return res.data;
+    } )
+    .catch( function failHandler( e ) {
+
+      return new Promise( function( resolve, reject ) {
+        var messageChannel = new MessageChannel();
+        messageChannel.port1.onmessage = function( event ) {
+          console.log('Desde el servicio: ', arguments)
+          resolve();
+          if (event.data.error) {
+            // reject(event.data.error);
+          } else {
+            // resolve(event.data);
+          }
+        };
+
+        navigator.serviceWorker.controller.postMessage(
+          {
+            method: 'POST',
+            url: '/api/products',
+            data: data
+          },
+          [messageChannel.port2]
+        );
+      } )
+
     } );
   }
 
