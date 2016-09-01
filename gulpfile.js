@@ -37,7 +37,7 @@ gulp.task( 'move', function() {
   gulp.src( [ './api/**/' ] )
   .pipe( gulp.dest( config.path.output + 'api/' ) );
 
-  gulp.src( [ 'index.html' ] )
+  gulp.src( [ 'index.html', 'manifest.json' ] )
     .pipe( gulp.dest( config.path.output ) );
 
   gulp.src( './app/images/**/' )
