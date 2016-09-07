@@ -7,7 +7,7 @@ function BridgeService() {
   } );
 
   function send( request ) {
-    return new Promise( function( resolve, reject ) {
+    return new Promise( function promise_set( resolve, reject ) {
       let messageChannel = new MessageChannel();
 
       // Set func to be called from sw.

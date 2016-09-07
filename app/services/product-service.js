@@ -18,11 +18,13 @@ function productService( $http, swBridgeService ) {
     } );
   }
 
-  function post( body ) {
-    let req = {
+  function post( product ) {
+    let req;
+
+    req = {
       method: 'POST',
       url: '/api/products',
-      data: body
+      data: product
     };
 
     return $http( req )
@@ -34,10 +36,13 @@ function productService( $http, swBridgeService ) {
       // Make same call through sw.
       return swBridgeService
         .send( req )
-        .then( function handle_success() {
-          console.info( 'La llamada desde el sw se efectuo correctamente: ', arguments );
+        .then( function handle_success( res ) {
+          let product = res.shift();
+
+          return product;
         } )
         .catch( function handle_error() {
+          // eslint-disable-next-line no-console
           console.error( 'La llamada desde el sw fallo: ', arguments );
         } );
 

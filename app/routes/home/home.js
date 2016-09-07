@@ -1,7 +1,7 @@
-homeCtrl.$inject = [ 'productService' ];
-function homeCtrl( productService ) {
+homeCtrl.$inject = [ '$scope', 'productService' ];
+function homeCtrl( $scope, productService ) {
   let self = this;
-
+  console.log('$scope: ', $scope)
   init();
 
   return Object.assign( self, {
@@ -14,13 +14,24 @@ function homeCtrl( productService ) {
 
   function add_product() {
     Object.assign( self.product, {
-      inCart: false,
+      tempId: Date.now(),
+      inCart: false
     } );
+
+    let temp_product = Object.assign( {}, self.product );
+    temp_product.status = 'Pending...';
+    self.products.push( temp_product );
 
     productService
       .post( self.product )
-      .then( function successPost() {
-        refresh_list();
+      .then( function successPost( new_product ) {
+
+        self.products.map( function find_product( item, key, arr ) {
+          if ( item.tempId == new_product.tempId ) {
+            arr[ key ] = new_product;
+          }
+        } );
+
       } );
 
     self.product = '';

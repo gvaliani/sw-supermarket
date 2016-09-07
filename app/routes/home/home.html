@@ -20,6 +20,7 @@
       <ul data-collapsible="accordion">
         <li class="card-panel product-card" data-ng-class="{ 'light-green lighten-5': product.inCart}" watch ng-repeat="product in home.products | orderBy: 'inCart' track by $index">
           <span class="product-card name">{{product.name}}</span>
+          <i>{{ product.status }}</i>
           <i data-ng-click="home.toggle_cart(product)" class="product-card icon fa fa-shopping-cart" data-ng-class="{ 'teal-text accent-3': product.inCart, 'grey-text': !product.inCart }"></i>
         </li>
       </ul>
