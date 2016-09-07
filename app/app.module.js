@@ -1,3 +1,5 @@
+require( 'traceur/bin/traceur-runtime' );
+
 let app_instance,
   router = require( './app.config' ),
   homeCtrl = require( './routes/home/home' ),
