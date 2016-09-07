@@ -27,6 +27,36 @@ function productService( $http, swBridgeService ) {
       data: product
     };
 
+    return request( req );
+  }
+
+  function put( product ) {
+    let req;
+
+    req = {
+      method: 'PUT',
+      url: '/api/products',
+      data: product
+    };
+
+    return request( req );
+  }
+
+  function del() {
+    let req;
+
+    req = {
+      method: 'DELETE',
+      url: '/api/products'
+    };
+
+    return request( req );
+  }
+
+  // PRIVATE FUNCTIONS
+
+  function request( req ) {
+
     return $http( req )
     .then( function succesHandler( res ) {
       return res.data;
@@ -47,23 +77,7 @@ function productService( $http, swBridgeService ) {
         } );
 
     } );
-  }
 
-  function put( data ) {
-    return $http( {
-      method: 'PUT',
-      url: '/api/products',
-      data: data
-    } ).then( function succesHandler( res ) {
-      return res.data;
-    } );
-  }
-
-  function del() {
-    return $http( {
-      method: 'DELETE',
-      url: '/api/products'
-    } );
   }
 }
 
