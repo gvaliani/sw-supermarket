@@ -51,21 +51,17 @@ self.addEventListener( 'install', function( event ) {
       config.path.styles + 'materialize.min.css',
 
       // APP
-      config.path.app + 'app.bundle.js'
+      config.path.app + 'app.bundle.js',
+
+      // DATA
+      config.path.app + 'api/products'
     ];
 
   event.waitUntil(
-		caches.open( cache_name )
-		.then( function( cache ) {
-			    console.log( 'abrio cache' );
-			    return cache.addAll( file_to_cache );
-		} )
-		.then( function( cache ) {
-			    self.skipWaiting();
-		} )
-		.catch( function( err ) {
-			    console.log( 'no abrio', err );
-		} )
+    save_in_cache( file_to_cache )
+      .then( function() {
+        self.skipWaiting();
+      } )
 		);
 } );
 
@@ -92,20 +88,14 @@ self.addEventListener( 'fetch', function interceptGetRequest( event ) {
         .match( event.request )
         .then( function matchHandler( response ) {
 
+          // Use cache data o fetch it.
           return response || fetch( event.request ).then(
-            function fetchSuccessful( response ) {
-              return caches.open( cache_name ).then(
-                function openCacheSuccessful( cache ) {
-                  cache.put( event.request, response.clone() );
-                  return response;
-                },
-                function openCacheFailure( e ) {
-                  console.log( 'Open cache error: ', e );
-                }
-              );
+            function fetch_successful( response ) {
+              return save_in_cache( event.request, response.clone() );
             },
-            function fetchFailure( e ) {
-              console.log( 'Fetch error: ', e );
+            function fetch_failure( e ) {
+              // eslint-disable-next-line no-console
+              console.log( 'Error on getting files: ', e );
             }
           );
 
@@ -113,28 +103,48 @@ self.addEventListener( 'fetch', function interceptGetRequest( event ) {
       );
   }
 
-  // For GET, POST, PUT, DELETE to API
-  if ( isApiCall ) {
-    console.log('event.request: ', event.request)
-    // let request = event.request.clone();
-    // event.respondWith(
-    //   fetch( event.request )
-    //     .then(
-    //       function fetchSuccess( response ) {
-    //         return response;
-    //       }
-    //     )
-    //     .catch( function fetchFailure( e ) {
+  if ( isApiCall && event.request.method == 'GET' ) {
 
-    //       self.registration.sync.register( 'myFirstSync' );
-    //     }
-    //   )
+    // event.respondWith(
+    //   caches
+    //     .match( event.request )
+    //     .then( function matchHandler( response ) {
+    //       return response;
+    //     } )
+    //     .catch( function( e ) {
+    //       console.log( 'Fallo la busqueda: ', e )
+    //     } )
     // )
+    console.log( 'Llamada a la api y a GET.' );
+    event.respondWith(
+      fetch( event.request )
+        .then( function response_handler( response ) {
+          return response;
+        } )
+        .catch( function( e ) {
+          console.log( 'Catch.' );
+          return caches
+            .match( event.request )
+            .then( function matchHandler( response ) {
+              console.log( 'Encontro algo: ', response.clone().json() );
+              return response;
+            } )
+            .catch( function( e ) {
+              console.log( 'Fallo la busqueda: ', e )
+            } )
+        } )
+    )
+  }
+
+  // API calls for methods POST, PUT and DELETE.
+  if ( isApiCall && event.request.method != 'GET' ) {
+    // Update the list of products.
+    udpate_list();
   }
 
 } );
 
-self.addEventListener( 'message', function messageHandler( event ) {
+self.addEventListener( 'message', function message_handler( event ) {
   // Make call through sync event.
   async_request( event.data, event );
 } );
@@ -142,7 +152,7 @@ self.addEventListener( 'message', function messageHandler( event ) {
 function async_request( data, message_event ) {
 
   function post( event ) {
-    if ( event.tag == 'myFirstSync' ) {
+    if ( event.tag == 'sync_call' ) {
 
       let request = new Request( data.url, {
         method: data.method,
@@ -152,12 +162,16 @@ function async_request( data, message_event ) {
       event.waitUntil(
         fetch( request )
           .then(
-            function fetchSuccess( response ) {
+            function fetch_success( response ) {
               let res = response.clone();
+
               // unbind event listener. Otherwise it will generate duplicated calls.
               self.removeEventListener( 'sync', post );
 
               res.json().then( function( json ) {
+                // Update product list
+                udpate_list();
+
                 message_event.ports[ 0 ].postMessage( [ json ] );
               } )
             }
@@ -167,9 +181,39 @@ function async_request( data, message_event ) {
   }
 
   self.addEventListener( 'sync', post );
-  self.registration.sync.register( 'myFirstSync' );
+  self.registration.sync.register( 'sync_call' );
 }
 
+function udpate_list() {
+  let request = new Request( 'api/products', {
+    method: 'GET'
+  } );
+
+  fetch( request )
+    .then( function fetch_success( response ) {
+      save_in_cache( request, response.clone() )
+    } )
+    .catch( function fetch_error( e ) {
+      // eslint-disable-next-line no-console
+      console.log( 'Error on fetch data for update the list of products: ', e );
+    } )
+}
+
+function save_in_cache( url, data ) {
+  return caches
+    .open( cache_name )
+    .then( function open_cache_successfully( cache ) {
+      if ( Array.isArray( url ) ) {
+        return cache.addAll( url );
+      } else {
+        return cache.put( url, data );
+      }
+    } )
+    .catch( function cache_error( e ) {
+      // eslint-disable-next-line no-console
+      console.log( 'Error opening cache or saving data in cache: ', e );
+    } );
+}
 
 // self.addEventListener( 'push', function( event ) {
 //   event.waitUntil(
